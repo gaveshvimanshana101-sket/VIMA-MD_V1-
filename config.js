@@ -14,3 +14,4 @@ BOT_OWNER: '94743678375',  // Replace with the owner's phone number
 
 };
  
+ 
