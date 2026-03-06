@@ -27,7 +27,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 const prefix = '.';
-const ownerNumber = ['94768546691'];
+const ownerNumber = ['94789706579'];
 const credsPath = path.join(__dirname, '/auth_info_baileys/creds.json');
 
 async function ensureSessionFile() {
@@ -63,11 +63,11 @@ async function ensureSessionFile() {
 }
 
 async function connectToWA() {
-  console.log("Connecting HANSA-MD 🧬...");
+  console.log("Connecting VIMA-MD 🧬...");
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, '/auth_info_baileys/'));
   const { version } = await fetchLatestBaileysVersion();
 
-  const hansa = makeWASocket({
+  const vima = makeWASocket({
     logger: P({ level: 'silent' }),
     printQRInTerminal: false,
     browser: Browsers.macOS("Firefox"),
@@ -78,17 +78,17 @@ async function connectToWA() {
     generateHighQualityLinkPreview: true,
   });
 
-  hansa.ev.on('connection.update', async (update) => {
+  vima.ev.on('connection.update', async (update) => {
     const { connection, lastDisconnect } = update;
     if (connection === 'close') {
       if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
         connectToWA();
       }
     } else if (connection === 'open') {
-      console.log('✅ HANSA-MD connected to WhatsApp');
+      console.log('✅ VIMA-MD connected to WhatsApp');
 
-      const up = `HANSA-MD connected ✅\n\nPREFIX: ${prefix}`;
-      await hansa.sendMessage(ownerNumber[0] + "@s.whatsapp.net", {
+      const up = `VIMA-MD connected ✅\n\nPREFIX: ${prefix}`;
+      await vima.sendMessage(ownerNumber[0] + "@s.whatsapp.net", {
         image: { url: `https://github.com/Hnsk23/hnsk/blob/main/images/HANSA%20md.png?raw=true` },
         caption: up
       });
@@ -101,12 +101,12 @@ async function connectToWA() {
     }
   });
 
-  hansa.ev.on('creds.update', saveCreds);
+  vima.ev.on('creds.update', saveCreds);
 
-  hansa.ev.on('messages.upsert', async ({ messages }) => {
+  vima.ev.on('messages.upsert', async ({ messages }) => {
     for (const msg of messages) {
       if (msg.messageStubType === 68) {
-        await hansa.sendMessageAck(msg.key);
+        await vima.sendMessageAck(msg.key);
       }
     }
 
@@ -116,7 +116,7 @@ async function connectToWA() {
     mek.message = getContentType(mek.message) === 'ephemeralMessage' ? mek.message.ephemeralMessage.message : mek.message;
     if (mek.key.remoteJid === 'status@broadcast') return;
 
-    const m = sms(hansa, mek);
+    const m = sms(vima, mek);
     const type = getContentType(mek.message);
     const from = mek.key.remoteJid;
     const body = type === 'conversation' ? mek.message.conversation : mek.message[type]?.text || mek.message[type]?.caption || '';
@@ -125,10 +125,10 @@ async function connectToWA() {
     const args = body.trim().split(/ +/).slice(1);
     const q = args.join(' ');
 
-    const sender = mek.key.fromMe ? hansa.user.id : (mek.key.participant || mek.key.remoteJid);
+    const sender = mek.key.fromMe ? vima.user.id : (mek.key.participant || mek.key.remoteJid);
     const senderNumber = sender.split('@')[0];
     const isGroup = from.endsWith('@g.us');
-    const botNumber = hansa.user.id.split(':')[0];
+    const botNumber = vima.user.id.split(':')[0];
     const pushname = mek.pushName || 'Sin Nombre';
     const isMe = botNumber.includes(senderNumber);
     const isOwner = ownerNumber.includes(senderNumber) || isMe;
@@ -141,14 +141,14 @@ async function connectToWA() {
     const isBotAdmins = isGroup ? groupAdmins.includes(botNumber2) : false;
     const isAdmins = isGroup ? groupAdmins.includes(sender) : false;
 
-    const reply = (text) => hansa.sendMessage(from, { text }, { quoted: mek });
+    const reply = (text) => vima.sendMessage(from, { text }, { quoted: mek });
 
     if (isCmd) {
       const cmd = commands.find((c) => c.pattern === commandName || (c.alias && c.alias.includes(commandName)));
       if (cmd) {
-        if (cmd.react) hansa.sendMessage(from, { react: { text: cmd.react, key: mek.key } });
+        if (cmd.react) vima.sendMessage(from, { react: { text: cmd.react, key: mek.key } });
         try {
-          cmd.function(hansa, mek, m, {
+          cmd.function(vima, mek, m, {
             from, quoted: mek, body, isCmd, command: commandName, args, q,
             isGroup, sender, senderNumber, botNumber2, botNumber, pushname,
             isMe, isOwner, groupMetadata, groupName, participants, groupAdmins,
@@ -164,7 +164,7 @@ async function connectToWA() {
     for (const handler of replyHandlers) {
       if (handler.filter(replyText, { sender, message: mek })) {
         try {
-          await handler.function(hansa, mek, m, {
+          await handler.function(vima, mek, m, {
             from, quoted: mek, body: replyText, sender, reply,
           });
           break;
@@ -179,7 +179,7 @@ async function connectToWA() {
 ensureSessionFile();
 
 app.get("/", (req, res) => {
-  res.send("Hey MOTHERFUCKER, HANSA-MD started✅");
+  res.send("Hey  VIMA-MD started✅");
 });
 
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
