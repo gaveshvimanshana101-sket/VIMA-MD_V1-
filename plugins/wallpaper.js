@@ -35,7 +35,7 @@ cmd(
 
       const selected = wallpapers.slice(0, 5); // get top 5
 
-      const header = `HANSA-MD WALLPAPER DOWNLOADER`;
+      const header = `VIMA-MD WALLPAPER DOWNLOADER`;
 
       await conn.sendMessage(
         from,
@@ -64,7 +64,7 @@ cmd(
         );
       }
 
-      return reply("*🌟 Enjoy your HD wallpapers! Thank you for using HANSA-MD.*");
+      return reply("*🌟 Enjoy your HD wallpapers! Thank you for using VIMA-MD.*");
     } catch (e) {
       console.error(e);
       reply(`*❌ Error:* ${e.message || e}`);
