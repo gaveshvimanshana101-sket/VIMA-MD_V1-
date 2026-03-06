@@ -21,7 +21,7 @@ cmd({
   desc: "Kick user from group",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, reply, participants, quoted, args }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply, participants, quoted, args }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
@@ -32,7 +32,7 @@ cmd({
   if (groupAdmins.includes(target)) 
     return reply("*I can't kick an admin.*");
 
-  await hansa.groupParticipantsUpdate(m.chat, [target], "remove");
+  await vima.groupParticipantsUpdate(m.chat, [target], "remove");
   return reply(`*Kicked:* @${target.split("@")[0]}`, { mentions: [target] });
 });
 
@@ -42,7 +42,7 @@ cmd({
   desc: "Tag all group members",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, reply, participants }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply, participants }) => {
   if (!isGroup) return reply("*This command can only be used in groups.*");
   if (!isAdmins) return reply("*Only group admins can use this command.*");
 
@@ -74,7 +74,7 @@ cmd({
   desc: "Set group profile picture",
   category: "group",
   filename: __filename
-}, async (hansa, mek, m, { isGroup, isAdmins, reply, participants, args, quoted }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply, participants, args, quoted }) => {
   if (!isGroup) return reply("❌ This command can only be used in groups!");
   if (!isAdmins) return reply("❌ You must be a group admin to use this command!");
 
@@ -82,7 +82,7 @@ cmd({
 
   try {
     const media = await downloadMediaMessage(quoted, 'buffer');
-    await hansa.updateProfilePicture(m.chat, media);
+    await vima.updateProfilePicture(m.chat, media);
     reply("✅ Group profile picture updated!");
   } catch (e) {
     console.error("❌ Error downloading image:", e);
@@ -96,7 +96,7 @@ cmd({
   desc: "List all group admins",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, reply, participants }) => {
+}, async (vima, mek, m, { isGroup, reply, participants }) => {
   if (!isGroup) return reply("*This command is for groups only.*");
 
   const admins = participants.filter(p => p.admin).map(p => `@${p.id.split("@")[0]}`).join("\n");
@@ -112,7 +112,7 @@ cmd({
     category: "group",
     filename: __filename
 },
-async (hansa, mek, m, { from, isGroup, isAdmins, reply, args }) => {
+async (vima, mek, m, { from, isGroup, isAdmins, reply, args }) => {
     try {
         if (!isGroup) return reply("⚠️ This command can only be used in a group!");
 
@@ -122,7 +122,7 @@ async (hansa, mek, m, { from, isGroup, isAdmins, reply, args }) => {
 
         const target = args[0].includes("@") ? args[0] : `${args[0]}@s.whatsapp.net`;
 
-        await hansa.groupParticipantsUpdate(from, [target], "add");
+        await vima.groupParticipantsUpdate(from, [target], "add");
 
         return reply(`✅ Successfully added: @${target.split('@')[0]}`);
     } catch (e) {
@@ -138,14 +138,14 @@ cmd({
   desc: "Promote user to admin",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, reply, quoted, args }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply, quoted, args }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
   const target = getTargetUser(mek, quoted, args);
   if (!target) return reply("*Mention or reply to a user to promote.*");
 
-  await hansa.groupParticipantsUpdate(m.chat, [target], "promote");
+  await vima.groupParticipantsUpdate(m.chat, [target], "promote");
   return reply(`*Promoted:* @${target.split("@")[0]}`, { mentions: [target] });
 });
 
@@ -155,14 +155,14 @@ cmd({
   desc: "Demote admin to member",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, reply, quoted, args }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply, quoted, args }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
   const target = getTargetUser(mek, quoted, args);
   if (!target) return reply("*Mention or reply to a user to demote.*");
 
-  await hansa.groupParticipantsUpdate(m.chat, [target], "demote");
+  await vima.groupParticipantsUpdate(m.chat, [target], "demote");
   return reply(`*Demoted:* @${target.split("@")[0]}`, { mentions: [target] });
 });
 
@@ -174,12 +174,12 @@ cmd({
     category: "group",
     filename: __filename
 },
-async (hansa, mek, m, { from, isGroup, isAdmins, reply }) => {
+async (vima, mek, m, { from, isGroup, isAdmins, reply }) => {
     try {
         if (!isGroup) return reply("⚠️ This command can only be used in a group!");
         if (!isAdmins) return reply("⚠️ This command is only for group admins!");
 
-        await hansa.groupSettingUpdate(from, "not_announcement");
+        await vima.groupSettingUpdate(from, "not_announcement");
 
         return reply("✅ Group has been unmuted. Everyone can send messages now!");
     } catch (e) {
@@ -196,13 +196,13 @@ cmd({
     category: "group",
     filename: __filename
 },
-async (hansa, mek, m, { from, isGroup, isAdmins, reply }) => {
+async (vima, mek, m, { from, isGroup, isAdmins, reply }) => {
     try {
         if (!isGroup) return reply("⚠️ This command can only be used in a group!");
 
         if (!isAdmins) return reply("⚠️ This command is only for group admins!");
 
-        await hansa.groupSettingUpdate(from, "announcement");
+        await vima.groupSettingUpdate(from, "announcement");
 
         return reply("✅ Group has been muted. Only admins can send messages now!");
     } catch (e) {
@@ -217,11 +217,11 @@ cmd({
   desc: "Reset group invite link",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, reply }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, reply }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
-  await hansa.groupRevokeInvite(m.chat);
+  await vima.groupRevokeInvite(m.chat);
   return reply("*Group invite link has been reset.*");
 });
 
@@ -232,11 +232,11 @@ cmd({
   desc: "Get current invite link",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, reply }) => {
+}, async (vima, mek, m, { isGroup, reply }) => {
   if (!isGroup) 
     return reply("*Group only & I must be an admin.*");
 
-  const code = await hansa.groupInviteCode(m.chat);
+  const code = await vima.groupInviteCode(m.chat);
   return reply(`*Group Link:*\nhttps://chat.whatsapp.com/${code}`);
 });
 
@@ -246,13 +246,13 @@ cmd({
   desc: "Change group name",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, args, reply }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, args, reply }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
   if (!args[0]) return reply("*Give a new group name.*");
 
-  await hansa.groupUpdateSubject(m.chat, args.join(" "));
+  await vima.groupUpdateSubject(m.chat, args.join(" "));
   return reply("*Group name updated.*");
 });
 
@@ -262,13 +262,13 @@ cmd({
   desc: "Change group description",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, isAdmins, args, reply }) => {
+}, async (vima, mek, m, { isGroup, isAdmins, args, reply }) => {
   if (!isGroup || !isAdmins) 
     return reply("*Group only & both you and I must be admins.*");
 
   if (!args[0]) return reply("*Give a new group description.*");
 
-  await hansa.groupUpdateDescription(m.chat, args.join(" "));
+  await vima.groupUpdateDescription(m.chat, args.join(" "));
   return reply("*Group description updated.*");
 });
 
@@ -279,10 +279,10 @@ cmd({
   desc: "Show group details",
   category: "group",
   filename: __filename,
-}, async (hansa, mek, m, { isGroup, reply }) => {
+}, async (vima, mek, m, { isGroup, reply }) => {
   if (!isGroup) return reply("*This command is for groups only.*");
 
-  const metadata = await hansa.groupMetadata(m.chat);
+  const metadata = await vima.groupMetadata(m.chat);
   const adminsCount = metadata.participants.filter(p => p.admin).length;
   const creation = new Date(metadata.creation * 1000).toLocaleString();
   const owner = metadata.owner || metadata.participants.find(p => p.admin === 'superadmin')?.id;
