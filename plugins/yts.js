@@ -11,7 +11,7 @@ cmd(
     filename: __filename,
   },
   async (
-    hansa,
+    vima,
     mek,
     m,
     {
@@ -44,7 +44,7 @@ cmd(
 ${formattedResults}
    `;
 
-      await hansa.sendMessage(
+      await vima.sendMessage(
         from,
         {
           image: {
