@@ -11,7 +11,7 @@ cmd(
     filename: __filename,
   },
   async (
-    hansa,
+    vima,
     mek,
     m,
     {
@@ -63,7 +63,7 @@ Your fb video
 👻 *Quality*: ${qualityText}
 `;
 
-      await hansa.sendMessage(
+      await vima.sendMessage(
         from,
         {
           image: {
@@ -74,7 +74,7 @@ Your fb video
         { quoted: mek }
       );
 
-      await hansa.sendMessage(
+      await vima.sendMessage(
         from,
         {
           video: { url: bestQualityUrl },
@@ -83,7 +83,7 @@ Your fb video
         { quoted: mek }
       );
 
-      return reply("Thank you for using HANSA-MD 😝🤍");
+      return reply("Thank you for using VIMA-MD 😝🤍");
     } catch (e) {
       console.error(e);
       reply(`*Error:* ${e.message || e}`);
