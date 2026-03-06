@@ -1,12 +1,12 @@
 {
-  "name": "HANSA-MD",
+  "name": "VIMA-MD",
   "version": "1.0.0",
-  "description": "A Powerfull Whatsapp Bot By HANSAKA NIRMAN",
+  "description": "A Powerfull Whatsapp Bot By GAVESH VIMANSHANA ",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name HANSA-MD",
-    "stop": "pm2 stop HANSA-MD",
-    "restart": "pm2 restart HANSA-MD"
+    "start": "pm2 start index.js --deep-monitoring --attach --name VIMA-MD",
+    "stop": "pm2 stop VIMA-MD",
+    "restart": "pm2 restart VIMA-MD"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
